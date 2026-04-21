@@ -124,6 +124,151 @@ An AI-powered mock interview platform that helps candidates practice technical i
 3. **Follow-ups**: Respond to AI-generated follow-up questions
 4. **Review Debrief**: Get detailed feedback with scores and improvement suggestions
 
+---
+
+## Spec-Driven Development with Kiro
+
+This project was built using **Kiro's spec-driven development workflow**, which structures feature development into three distinct phases: Requirements → Design → Implementation. This approach ensures clarity, reduces rework, and maintains alignment between intent and execution.
+
+### What is Spec-Driven Development?
+
+Spec-driven development is a structured approach where you:
+1. **Define requirements** - What needs to be built and why
+2. **Design the solution** - How it will work (architecture, data flow, API contracts)
+3. **Implement incrementally** - Break design into tasks and execute with AI assistance
+
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         SPEC-DRIVEN WORKFLOW                         │
+└─────────────────────────────────────────────────────────────────────┘
+
+    ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
+    │ REQUIREMENTS │────────▶│    DESIGN    │────────▶│IMPLEMENTATION│
+    └──────────────┘         └──────────────┘         └──────────────┘
+          │                         │                         │
+          │                         │                         │
+          ▼                         ▼                         ▼
+    
+    What to build?          How to build it?         Build it!
+    ─────────────           ────────────────         ─────────
+    • User stories          • Architecture           • Task breakdown
+    • Acceptance criteria   • Data models            • Incremental dev
+    • Success metrics       • API contracts          • AI-assisted coding
+                           • Component design        • Continuous testing
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                      PREPMATE ARCHITECTURE                           │
+└─────────────────────────────────────────────────────────────────────┘
+
+    ┌─────────────────────────────────────────────────────────────┐
+    │                      FRONTEND (Next.js)                      │
+    │  ┌────────────┐  ┌────────────┐  ┌────────────────────┐   │
+    │  │   Home     │  │ Interview  │  │      Debrief       │   │
+    │  │   Page     │  │    Page    │  │       Page         │   │
+    │  └─────┬──────┘  └─────┬──────┘  └──────────┬─────────┘   │
+    │        │                │                     │              │
+    │        └────────────────┴─────────────────────┘              │
+    │                         │                                    │
+    │              ┌──────────▼──────────┐                        │
+    │              │ InterviewSession    │                        │
+    │              │     Context         │                        │
+    │              └──────────┬──────────┘                        │
+    └─────────────────────────┼─────────────────────────────────┘
+                              │
+                              │ HTTP/REST
+                              │
+    ┌─────────────────────────▼─────────────────────────────────┐
+    │                    BACKEND (FastAPI)                       │
+    │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐ │
+    │  │ Session  │  │   TTS    │  │   STT    │  │ Followup │ │
+    │  │  Router  │  │  Router  │  │  Router  │  │  Router  │ │
+    │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘ │
+    │       │             │              │              │        │
+    │       └─────────────┴──────────────┴──────────────┘        │
+    │                         │                                  │
+    │              ┌──────────▼──────────┐                      │
+    │              │   Service Layer     │                      │
+    │              └──────────┬──────────┘                      │
+    └─────────────────────────┼─────────────────────────────────┘
+                              │
+                 ┌────────────┴────────────┐
+                 │                         │
+    ┌────────────▼──────────┐  ┌──────────▼──────────┐
+    │   Google Gemini       │  │    ElevenLabs       │
+    │   ─────────────       │  │    ───────────      │
+    │   • Question gen      │  │    • TTS (speech)   │
+    │   • Follow-ups        │  │    • STT (audio)    │
+    │   • Evaluation        │  │                     │
+    └───────────────────────┘  └─────────────────────┘
+```
+
+### How We Used Specs in PrepMate
+
+#### 1. Requirements Phase
+**File**: `.kiro/specs/prepmate-ai-mock-interviewer/requirements.md`
+
+Defined:
+- User personas (job seekers preparing for interviews)
+- Core features (5-question format, voice interaction, feedback)
+- Success criteria (realistic interview experience, actionable feedback)
+- Non-functional requirements (response time, accessibility)
+
+#### 2. Design Phase
+**File**: `.kiro/specs/prepmate-ai-mock-interviewer/design.md`
+
+Specified:
+- **Architecture**: FastAPI backend + Next.js frontend
+- **Data Flow**: Job description → Questions → Answers → Follow-ups → Debrief
+- **API Contracts**: 
+  - `POST /api/session/start` - Generate questions
+  - `POST /api/stt` - Transcribe audio
+  - `POST /api/followup` - Generate follow-ups
+  - `POST /api/debrief` - Evaluate performance
+- **Component Design**: InterviewSessionContext, AudioRecorder, QuestionCard
+- **State Management**: React Context for interview session state
+
+#### 3. Implementation Phase
+**File**: `.kiro/specs/prepmate-ai-mock-interviewer/tasks.md`
+
+Broke down into tasks:
+- ✅ Set up FastAPI backend with routers
+- ✅ Integrate Google Gemini for question generation
+- ✅ Integrate ElevenLabs for TTS/STT
+- ✅ Build Next.js frontend with App Router
+- ✅ Implement interview session state management
+- ✅ Create audio recording component
+- ✅ Build debrief page with feedback display
+- ✅ Apply design system (typography, color, spacing)
+
+### Benefits of Spec-Driven Development
+
+1. **Clarity**: Everyone understands what's being built and why
+2. **Reduced Rework**: Design decisions made upfront prevent costly changes
+3. **Better Collaboration**: Specs serve as documentation and communication tool
+4. **AI-Friendly**: Clear specs enable AI to generate better code
+5. **Incremental Progress**: Tasks provide clear checkpoints and milestones
+6. **Maintainability**: Future developers understand the original intent
+
+### Key Learnings
+
+- **Start with Requirements**: Don't jump to code without understanding the problem
+- **Design Before Implementation**: Architecture decisions are easier to change on paper
+- **Break Down Tasks**: Small, focused tasks are easier to implement and test
+- **Iterate on Specs**: Specs evolve as you learn - update them as needed
+- **Use AI Effectively**: Clear specs help AI assistants generate better code
+
+### Spec Files Location
+
+All spec files are stored in `.kiro/specs/prepmate-ai-mock-interviewer/`:
+- `requirements.md` - What to build
+- `design.md` - How to build it
+- `tasks.md` - Implementation checklist
+
+---
+
 ## API Documentation
 
 The backend provides interactive API documentation:
