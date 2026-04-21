@@ -79,9 +79,10 @@ export default function DebriefPage() {
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 80) return "Strong";
-    if (score >= 60) return "Good";
-    if (score >= 40) return "Fair";
+    // scores are 0–10 from the backend
+    if (score >= 8) return "Strong";
+    if (score >= 6) return "Good";
+    if (score >= 4) return "Fair";
     return "Needs work";
   };
 
@@ -196,8 +197,8 @@ export default function DebriefPage() {
                 <div className="grid lg:grid-cols-12 gap-6 md:gap-8 mb-6 md:mb-8">
                   <div className="lg:col-span-2">
                     <div className="text-4xl md:text-5xl font-bold text-accent mb-2">
-                      {item.score.toFixed(0)}
-                      <span className="text-lg md:text-xl text-muted">/100</span>
+                      {item.score.toFixed(1)}
+                      <span className="text-lg md:text-xl text-muted">/10</span>
                     </div>
                     <div className="text-muted text-sm">
                       {getScoreLabel(item.score)}
