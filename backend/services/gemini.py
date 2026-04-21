@@ -106,4 +106,15 @@ def call_gemini(prompt: str) -> dict:
     )
     response = model.generate_content(prompt)
     raw_text = response.text
-    return json.loads(raw_text)
+    
+    # Clean up the response - sometimes Gemini adds extra text or markdown
+    # Find the first { and last }
+    start = raw_text.find('{')
+    end = raw_text.rfind('}')
+    
+    if start != -1 and end != -1 and end > start:
+        json_text = raw_text[start:end + 1]
+    else:
+        json_text = raw_text
+    
+    return json.loads(json_text)

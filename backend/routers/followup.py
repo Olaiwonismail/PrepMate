@@ -1,6 +1,8 @@
 """Followup router — handles POST /api/followup."""
 
+import json
 import logging
+import re
 
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
@@ -30,6 +32,27 @@ class FollowupResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Helper functions
+# ---------------------------------------------------------------------------
+
+
+def clean_json_response(text: str) -> str:
+    """Clean up Gemini response to extract valid JSON."""
+    # Remove markdown code blocks if present
+    text = re.sub(r'^```json\s*', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^```\s*$', '', text, flags=re.MULTILINE)
+    
+    # Find the first { and last }
+    start = text.find('{')
+    end = text.rfind('}')
+    
+    if start != -1 and end != -1 and end > start:
+        return text[start:end + 1]
+    
+    return text
+
+
+# ---------------------------------------------------------------------------
 # Route
 # ---------------------------------------------------------------------------
 
@@ -51,8 +74,13 @@ async def generate_followup(body: FollowupRequest):
         # If no follow-up is needed, generate an acknowledgment for transition
         if not raw["needs_followup"]:
             ack_prompt = build_acknowledgment_prompt(body.answer)
-            ack_raw = call_gemini(ack_prompt)
-            acknowledgment = ack_raw.get("acknowledgment")
+            try:
+                ack_raw = call_gemini(ack_prompt)
+                acknowledgment = ack_raw.get("acknowledgment")
+            except Exception as ack_exc:
+                logger.warning("Failed to generate acknowledgment: %s", ack_exc)
+                # Use a default acknowledgment if generation fails
+                acknowledgment = "Got it."
 
         validated = FollowupResponse(
             needs_followup=raw["needs_followup"],

@@ -4,11 +4,12 @@ import { useEffect, useState, useRef } from "react";
 
 interface QuestionCardProps {
   question: string;
+  acknowledgment?: string;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-export default function QuestionCard({ question }: QuestionCardProps) {
+export default function QuestionCard({ question, acknowledgment }: QuestionCardProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioError, setAudioError] = useState(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState(true);
@@ -21,12 +22,17 @@ export default function QuestionCard({ question }: QuestionCardProps) {
       setAudioError(false);
 
       try {
+        // Combine acknowledgment and question for TTS
+        const textToSpeak = acknowledgment 
+          ? `${acknowledgment} ${question}`
+          : question;
+
         const response = await fetch(`${API_URL}/api/tts`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ text: question }),
+          body: JSON.stringify({ text: textToSpeak }),
         });
 
         if (!response.ok) {
@@ -53,7 +59,7 @@ export default function QuestionCard({ question }: QuestionCardProps) {
         URL.revokeObjectURL(audioUrl);
       }
     };
-  }, [question]);
+  }, [question, acknowledgment]);
 
   // Auto-play when audio is loaded
   useEffect(() => {

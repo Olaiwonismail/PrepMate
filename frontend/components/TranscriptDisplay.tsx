@@ -45,8 +45,8 @@ export default function TranscriptDisplay({
 
       {/* Transcript content */}
       {!isProcessing && transcript && (
-        <div className="p-4 md:p-6 bg-surface border-l-4 border-accent animate-fade-in">
-          <p className="text-foreground/80 leading-relaxed text-sm md:text-base">
+        <div className="p-4 md:p-6 bg-[oklch(0.12_0.005_25)] border-l-4 border-accent animate-fade-in">
+          <p className="text-[oklch(0.85_0.005_25)] leading-relaxed text-sm md:text-base">
             {transcript}
           </p>
         </div>
