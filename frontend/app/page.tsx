@@ -57,8 +57,8 @@ export default function Home() {
             {/* Right: Stats - Staggered Animation */}
             <div className="lg:col-span-5 space-y-8 md:space-y-12">
               <div className="animate-fade-in stagger-2">
-                <div className="text-5xl md:text-6xl font-bold text-foreground mb-2">5</div>
-                <div className="text-muted">Questions per session</div>
+                <div className="text-5xl md:text-6xl font-bold text-foreground mb-2">Complete</div>
+                <div className="text-muted">Interview experience</div>
               </div>
               <div className="animate-fade-in stagger-3">
                 <div className="text-5xl md:text-6xl font-bold text-foreground mb-2">∞</div>
