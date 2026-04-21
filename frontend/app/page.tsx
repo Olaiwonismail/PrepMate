@@ -6,7 +6,6 @@ import { useInterviewSession } from "../contexts/InterviewSessionContext";
 
 export default function Home() {
   const [jobDescription, setJobDescription] = useState("");
-  const [interviewType, setInterviewType] = useState<"behavioral" | "technical" | "mixed">("mixed");
   const [showStartForm, setShowStartForm] = useState(false);
   const { session, startSession, error } = useInterviewSession();
   const router = useRouter();
@@ -17,9 +16,7 @@ export default function Home() {
 
   // Navigate to interview page when questions are loaded
   useEffect(() => {
-    console.log("Home page - session.phase:", session.phase);
     if (session.phase === "asking") {
-      console.log("Navigating to /interview");
       router.push("/interview");
     }
   }, [session.phase, router]);
@@ -31,110 +28,95 @@ export default function Home() {
     return (
       <main className="min-h-screen bg-background">
         {/* Header */}
-        <header className="px-8 py-6 border-b border-border">
+        <header className="px-6 md:px-8 py-6 border-b border-border">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-2xl font-bold text-foreground">PrepMate</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-foreground">PrepMate</h1>
           </div>
         </header>
 
-        {/* Hero Section - Asymmetric Layout */}
-        <div className="max-w-7xl mx-auto px-8 py-24">
-          <div className="grid lg:grid-cols-12 gap-16 items-start">
+        {/* Hero Section - Asymmetric, Mobile-First */}
+        <section className="max-w-7xl mx-auto px-6 md:px-8 py-12 md:py-20 lg:py-24">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             {/* Left: Main Content */}
-            <div className="lg:col-span-7">
-              <h2 className="text-6xl font-bold text-foreground mb-6 leading-tight">
+            <div className="lg:col-span-7 animate-fade-in stagger-1">
+              <h2 className="mb-6 md:mb-8">
                 Practice until<br />the interview<br />feels <span className="text-accent">easy</span>
               </h2>
-              <p className="text-xl text-foreground/60 mb-12 max-w-xl">
+              <p className="text-lg md:text-xl text-muted mb-8 md:mb-12">
                 Your AI interviewer asks real questions, listens to your answers, and pushes back — just like a real interview.
               </p>
               <button
                 onClick={() => setShowStartForm(true)}
-                className="px-8 py-4 bg-accent hover:bg-accent-dark text-white text-lg font-semibold transition-all duration-200 ease-smooth"
+                className="px-6 md:px-8 py-3 md:py-4 bg-accent hover:bg-accent-hover text-white text-base md:text-lg font-semibold transition-all duration-base ease-smooth min-h-touch"
+                aria-label="Start practicing interviews"
               >
                 Start practicing →
               </button>
             </div>
 
-            {/* Right: Stats */}
-            <div className="lg:col-span-5 space-y-12">
-              <div>
-                <div className="text-5xl font-bold text-foreground mb-2">5</div>
-                <div className="text-foreground/60">Questions per session</div>
+            {/* Right: Stats - Staggered Animation */}
+            <div className="lg:col-span-5 space-y-8 md:space-y-12">
+              <div className="animate-fade-in stagger-2">
+                <div className="text-5xl md:text-6xl font-bold text-foreground mb-2">5</div>
+                <div className="text-muted">Questions per session</div>
               </div>
-              <div>
-                <div className="text-5xl font-bold text-foreground mb-2">∞</div>
-                <div className="text-foreground/60">Practice sessions</div>
+              <div className="animate-fade-in stagger-3">
+                <div className="text-5xl md:text-6xl font-bold text-foreground mb-2">∞</div>
+                <div className="text-muted">Practice sessions</div>
               </div>
-              <div>
-                <div className="text-5xl font-bold text-foreground mb-2">0</div>
-                <div className="text-foreground/60">Scheduling required</div>
+              <div className="animate-fade-in stagger-4">
+                <div className="text-5xl md:text-6xl font-bold text-foreground mb-2">0</div>
+                <div className="text-muted">Scheduling required</div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Features Section - List Layout */}
-        <div className="border-t border-border bg-surface">
-          <div className="max-w-7xl mx-auto px-8 py-24">
-            <h3 className="text-3xl font-bold text-foreground mb-16">
-              How it works
-            </h3>
-            <div className="space-y-16">
-              <div className="grid lg:grid-cols-12 gap-8">
-                <div className="lg:col-span-2">
-                  <div className="text-6xl font-bold text-accent">01</div>
+        <section className="border-t border-border bg-surface">
+          <div className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-20 lg:py-24">
+            <h3 className="mb-12 md:mb-16">How it works</h3>
+            <div className="space-y-12 md:space-y-16">
+              {[
+                {
+                  num: "01",
+                  title: "Paste a job description",
+                  desc: "We analyze the role and generate 5 tailored questions that match what you'll actually be asked."
+                },
+                {
+                  num: "02",
+                  title: "Answer out loud",
+                  desc: "Use your voice to answer. The AI listens, transcribes, and generates follow-up questions based on your response."
+                },
+                {
+                  num: "03",
+                  title: "Get detailed feedback",
+                  desc: "After the session, review your scores, strengths, and specific areas to improve for each question."
+                }
+              ].map((item, index) => (
+                <div key={item.num} className="grid lg:grid-cols-12 gap-6 md:gap-8 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                  <div className="lg:col-span-2">
+                    <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-accent">{item.num}</div>
+                  </div>
+                  <div className="lg:col-span-10">
+                    <h4 className="mb-3 md:mb-4">{item.title}</h4>
+                    <p className="text-base md:text-lg text-muted">
+                      {item.desc}
+                    </p>
+                  </div>
                 </div>
-                <div className="lg:col-span-10">
-                  <h4 className="text-2xl font-bold text-foreground mb-4">
-                    Paste a job description
-                  </h4>
-                  <p className="text-lg text-foreground/60 max-w-2xl">
-                    We analyze the role and generate 5 tailored questions that match what you'll actually be asked.
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid lg:grid-cols-12 gap-8">
-                <div className="lg:col-span-2">
-                  <div className="text-6xl font-bold text-accent">02</div>
-                </div>
-                <div className="lg:col-span-10">
-                  <h4 className="text-2xl font-bold text-foreground mb-4">
-                    Answer out loud
-                  </h4>
-                  <p className="text-lg text-foreground/60 max-w-2xl">
-                    Use your voice to answer. The AI listens, transcribes, and generates follow-up questions based on your response.
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid lg:grid-cols-12 gap-8">
-                <div className="lg:col-span-2">
-                  <div className="text-6xl font-bold text-accent">03</div>
-                </div>
-                <div className="lg:col-span-10">
-                  <h4 className="text-2xl font-bold text-foreground mb-4">
-                    Get detailed feedback
-                  </h4>
-                  <p className="text-lg text-foreground/60 max-w-2xl">
-                    After the session, review your scores, strengths, and specific areas to improve for each question.
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Question Types Section */}
-        <div className="max-w-7xl mx-auto px-8 py-24">
-          <h3 className="text-3xl font-bold text-foreground mb-4">
-            The 5 questions we ask
-          </h3>
-          <p className="text-foreground/60 mb-16 max-w-2xl">
+        <section className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-20 lg:py-24">
+          <h3 className="mb-4">The 5 questions we ask</h3>
+          <p className="text-muted mb-12 md:mb-16">
             Every interview follows a structured format designed to test the skills that matter most
           </p>
-          <div className="space-y-8">
+          <div className="space-y-6 md:space-y-8">
             {[
               {
                 num: "1",
@@ -162,15 +144,13 @@ export default function Home() {
                 desc: "A live incident just happened. How do you respond under pressure? We simulate real crisis scenarios."
               }
             ].map((item) => (
-              <div key={item.num} className="grid lg:grid-cols-12 gap-8 py-6 border-t border-border">
+              <div key={item.num} className="grid lg:grid-cols-12 gap-6 md:gap-8 py-6 border-t border-border">
                 <div className="lg:col-span-1">
-                  <div className="text-3xl font-bold text-accent">{item.num}</div>
+                  <div className="text-2xl md:text-3xl font-bold text-accent">{item.num}</div>
                 </div>
                 <div className="lg:col-span-11">
-                  <h4 className="text-xl font-bold text-foreground mb-2">
-                    {item.title}
-                  </h4>
-                  <p className="text-foreground/60 max-w-3xl">
+                  <h4 className="mb-2">{item.title}</h4>
+                  <p className="text-muted">
                     {item.desc}
                   </p>
                 </div>
@@ -178,15 +158,16 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="mt-16">
+          <div className="mt-12 md:mt-16">
             <button
               onClick={() => setShowStartForm(true)}
-              className="px-8 py-4 bg-accent hover:bg-accent-dark text-white text-lg font-semibold transition-all duration-200 ease-smooth"
+              className="px-6 md:px-8 py-3 md:py-4 bg-accent hover:bg-accent-hover text-white text-base md:text-lg font-semibold transition-all duration-base ease-smooth min-h-touch"
+              aria-label="Ready to start practicing"
             >
               Ready to start →
             </button>
           </div>
-        </div>
+        </section>
       </main>
     );
   }
@@ -194,107 +175,67 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
-      <header className="px-8 py-6 border-b border-border">
+      <header className="px-6 md:px-8 py-6 border-b border-border">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <button
             onClick={() => setShowStartForm(false)}
-            className="text-foreground/60 hover:text-foreground transition-colors duration-200"
+            className="text-muted hover:text-foreground transition-colors duration-base min-h-touch flex items-center gap-2"
+            aria-label="Go back to home"
           >
             ← Back
           </button>
-          <h1 className="text-2xl font-bold text-foreground">PrepMate</h1>
-          <div className="w-16"></div>
+          <h1 className="text-xl md:text-2xl font-bold text-foreground">PrepMate</h1>
+          <div className="w-16 md:w-20"></div>
         </div>
       </header>
 
       {/* Form */}
-      <div className="max-w-4xl mx-auto px-8 py-16">
-        <h2 className="text-4xl font-bold text-foreground mb-4">
-          Start your practice session
-        </h2>
-        <p className="text-foreground/60 text-lg mb-12">
+      <div className="max-w-3xl mx-auto px-6 md:px-8 py-12 md:py-16">
+        <h2 className="mb-4">Start your practice session</h2>
+        <p className="text-muted text-base md:text-lg mb-8 md:mb-12">
           Paste a job description and we'll generate tailored interview questions
         </p>
 
         {/* Job Description Input */}
-        <div className="mb-8">
-          <label className="block text-foreground/60 text-sm mb-3 font-medium">
+        <div className="mb-6 md:mb-8">
+          <label htmlFor="job-description" className="block text-muted text-sm mb-3 font-medium">
             Job description
           </label>
           <textarea
-            className="w-full h-48 bg-surface text-foreground p-6 border border-border focus:border-accent focus:outline-none resize-none placeholder-foreground/40 transition-colors duration-200"
+            id="job-description"
+            className="w-full h-48 md:h-56 bg-surface text-foreground p-4 md:p-6 border border-border focus:border-accent focus:outline-none resize-none placeholder-muted transition-colors duration-base"
             placeholder="e.g. Backend Engineer at Paystack — Python, FastAPI, PostgreSQL..."
             maxLength={10000}
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             disabled={session.phase === "loading"}
+            aria-describedby={error ? "job-description-error" : undefined}
           />
         </div>
 
-        {/* Interview Type Selection */}
-        <div className="mb-8">
-          <label className="block text-foreground/60 text-sm mb-3 font-medium">
-            Interview type
-          </label>
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => setInterviewType("behavioral")}
-              className={`px-6 py-3 font-medium transition-all duration-200 ${
-                interviewType === "behavioral"
-                  ? "bg-accent text-white"
-                  : "bg-surface text-foreground hover:bg-border"
-              }`}
-            >
-              Behavioral
-            </button>
-            <button
-              type="button"
-              onClick={() => setInterviewType("technical")}
-              className={`px-6 py-3 font-medium transition-all duration-200 ${
-                interviewType === "technical"
-                  ? "bg-accent text-white"
-                  : "bg-surface text-foreground hover:bg-border"
-              }`}
-            >
-              Technical
-            </button>
-            <button
-              type="button"
-              onClick={() => setInterviewType("mixed")}
-              className={`px-6 py-3 font-medium transition-all duration-200 ${
-                interviewType === "mixed"
-                  ? "bg-accent text-white"
-                  : "bg-surface text-foreground hover:bg-border"
-              }`}
-            >
-              Mixed
-            </button>
-          </div>
-        </div>
-
-        {/* Error Message */}
+        {/* Error Message - Helpful and actionable */}
         {error && (
-          <div className="mb-8 p-4 bg-accent/10 border-l-4 border-accent">
+          <div id="job-description-error" className="mb-6 md:mb-8 p-4 bg-error/10 border-l-4 border-error" role="alert">
             <p className="text-foreground mb-2">{error}</p>
             <button
               onClick={handleSubmit}
-              className="text-accent hover:text-accent-dark font-medium underline"
+              className="text-accent hover:text-accent-hover font-medium underline transition-colors duration-base"
             >
               Try again
             </button>
           </div>
         )}
 
-        {/* Start Button */}
+        {/* Start Button - Clear, active label */}
         <button
           onClick={handleSubmit}
           disabled={isButtonDisabled}
-          className={`w-full py-4 font-semibold transition-all duration-200 ${
+          className={`w-full py-3 md:py-4 font-semibold transition-all duration-base min-h-touch ${
             isButtonDisabled
-              ? "bg-surface text-foreground/40 cursor-not-allowed"
+              ? "bg-surface text-muted cursor-not-allowed"
               : "bg-foreground text-background hover:opacity-90"
           }`}
+          aria-label={session.phase === "loading" ? "Generating questions" : "Start interview"}
         >
           {session.phase === "loading" ? (
             <span className="flex items-center justify-center gap-3">
@@ -303,6 +244,7 @@ export default function Home() {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <circle
                   className="opacity-25"

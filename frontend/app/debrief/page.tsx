@@ -55,7 +55,7 @@ export default function DebriefPage() {
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch debrief: ${response.status}`);
+          throw new Error(`Failed to generate feedback. Please try again.`);
         }
 
         const data = await response.json();
@@ -63,7 +63,7 @@ export default function DebriefPage() {
       } catch (err) {
         console.error("Failed to fetch debrief:", err);
         setError(
-          err instanceof Error ? err.message : "Failed to load debrief"
+          err instanceof Error ? err.message : "Failed to load feedback. Please try again."
         );
       } finally {
         setIsLoading(false);
@@ -85,15 +85,17 @@ export default function DebriefPage() {
     return "Needs work";
   };
 
+  // Loading state - Skeleton pattern
   if (isLoading) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-8">
+      <main className="flex min-h-screen flex-col items-center justify-center p-6 md:p-8">
         <div className="flex flex-col items-center gap-4">
           <svg
             className="animate-spin h-12 w-12 text-accent"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <circle
               className="opacity-25"
@@ -110,24 +112,26 @@ export default function DebriefPage() {
             ></path>
           </svg>
           <p className="text-lg text-foreground font-medium">
-            Generating your debrief...
+            Analyzing your answers...
           </p>
         </div>
       </main>
     );
   }
 
+  // Error state - Helpful message
   if (error) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-8">
+      <main className="flex min-h-screen flex-col items-center justify-center p-6 md:p-8">
         <div className="max-w-md w-full">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Error</h1>
-          <p className="text-foreground/60 mb-6">{error}</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Something went wrong</h1>
+          <p className="text-muted mb-6">{error}</p>
           <button
             onClick={handleStartNewInterview}
-            className="w-full py-3 px-6 font-semibold text-white bg-accent hover:bg-accent-dark transition-colors duration-200"
+            className="w-full py-3 px-6 font-semibold text-white bg-accent hover:bg-accent-hover transition-colors duration-base min-h-touch"
+            aria-label="Start a new interview"
           >
-            Start New Interview
+            Start new interview
           </button>
         </div>
       </main>
@@ -141,80 +145,74 @@ export default function DebriefPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
-      <header className="px-8 py-6 border-b border-border">
+      <header className="px-6 md:px-8 py-6 border-b border-border">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl font-bold text-foreground">PrepMate</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-foreground">PrepMate</h1>
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-8 py-16">
+      <div className="max-w-5xl mx-auto px-6 md:px-8 py-12 md:py-16">
         {/* Title Section */}
-        <div className="mb-16">
-          <h2 className="text-5xl font-bold text-foreground mb-6">
-            Interview complete
-          </h2>
-          <p className="text-foreground/60 text-lg max-w-3xl">
+        <div className="mb-12 md:mb-16 animate-fade-in stagger-1">
+          <h2 className="mb-4 md:mb-6">Interview complete</h2>
+          <p className="text-muted text-base md:text-lg max-w-3xl">
             {session.jobDescription.substring(0, 150)}...
           </p>
         </div>
 
         {/* Overall Score - Asymmetric Layout */}
-        <div className="grid lg:grid-cols-12 gap-12 mb-24 pb-16 border-b border-border">
-          <div className="lg:col-span-4">
-            <div className="text-7xl font-bold text-foreground mb-2">
+        <div className="grid lg:grid-cols-12 gap-8 md:gap-12 mb-16 md:mb-24 pb-12 md:pb-16 border-b border-border">
+          <div className="lg:col-span-4 animate-fade-in stagger-2">
+            <div className="text-6xl md:text-7xl font-bold text-foreground mb-2">
               {debriefData.overall_score}
-              <span className="text-3xl text-foreground/40">/100</span>
+              <span className="text-2xl md:text-3xl text-muted">/100</span>
             </div>
-            <div className="text-foreground/60 text-lg">Overall score</div>
+            <div className="text-muted text-base md:text-lg">Overall score</div>
           </div>
-          <div className="lg:col-span-8 space-y-6">
-            <div>
-              <div className="text-2xl font-bold text-foreground mb-2">
+          <div className="lg:col-span-8 space-y-6 md:space-y-8">
+            <div className="animate-fade-in stagger-3">
+              <div className="text-2xl md:text-3xl font-bold text-foreground mb-2">
                 {debriefData.feedback.length}
               </div>
-              <div className="text-foreground/60">Questions answered</div>
+              <div className="text-muted">Questions answered</div>
             </div>
-            <div>
-              <div className="text-2xl font-bold text-foreground mb-2">
+            <div className="animate-fade-in stagger-4">
+              <div className="text-2xl md:text-3xl font-bold text-foreground mb-2">
                 {debriefData.feedback.filter((f) => f.improvements.length > 0).length}
               </div>
-              <div className="text-foreground/60">Areas to improve</div>
+              <div className="text-muted">Areas to improve</div>
             </div>
           </div>
         </div>
 
         {/* Question Breakdown */}
-        <div className="mb-16">
-          <h3 className="text-3xl font-bold text-foreground mb-12">
-            Question breakdown
-          </h3>
+        <div className="mb-12 md:mb-16">
+          <h3 className="mb-8 md:mb-12">Question breakdown</h3>
 
-          <div className="space-y-16">
+          <div className="space-y-12 md:space-y-16">
             {debriefData.feedback.map((item, index) => (
-              <div key={index} className="border-t border-border pt-12">
+              <div key={index} className="border-t border-border pt-8 md:pt-12 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                 {/* Question Header */}
-                <div className="grid lg:grid-cols-12 gap-8 mb-8">
+                <div className="grid lg:grid-cols-12 gap-6 md:gap-8 mb-6 md:mb-8">
                   <div className="lg:col-span-2">
-                    <div className="text-4xl font-bold text-accent mb-2">
+                    <div className="text-4xl md:text-5xl font-bold text-accent mb-2">
                       {item.score.toFixed(0)}
-                      <span className="text-xl text-foreground/40">/100</span>
+                      <span className="text-lg md:text-xl text-muted">/100</span>
                     </div>
-                    <div className="text-foreground/60 text-sm">
+                    <div className="text-muted text-sm">
                       {getScoreLabel(item.score)}
                     </div>
                   </div>
                   <div className="lg:col-span-10">
-                    <h4 className="text-xl font-bold text-foreground mb-4">
-                      {item.question}
-                    </h4>
-                    <p className="text-foreground/60 leading-relaxed">
+                    <h4 className="mb-3 md:mb-4">{item.question}</h4>
+                    <p className="text-muted leading-relaxed">
                       {session.answers[index]?.transcript.substring(0, 200)}...
                     </p>
                   </div>
                 </div>
 
                 {/* Feedback */}
-                <div className="grid lg:grid-cols-12 gap-8">
+                <div className="grid lg:grid-cols-12 gap-6 md:gap-8">
                   <div className="lg:col-span-2"></div>
                   <div className="lg:col-span-10 space-y-6">
                     {/* Strengths */}
@@ -225,8 +223,8 @@ export default function DebriefPage() {
                         </h5>
                         <ul className="space-y-2">
                           {item.strengths.map((strength, i) => (
-                            <li key={i} className="text-foreground/80 leading-relaxed">
-                              • {strength}
+                            <li key={i} className="text-foreground/80 leading-relaxed pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-accent">
+                              {strength}
                             </li>
                           ))}
                         </ul>
@@ -241,8 +239,8 @@ export default function DebriefPage() {
                         </h5>
                         <ul className="space-y-2">
                           {item.improvements.map((improvement, i) => (
-                            <li key={i} className="text-foreground/80 leading-relaxed">
-                              • {improvement}
+                            <li key={i} className="text-foreground/80 leading-relaxed pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-accent">
+                              {improvement}
                             </li>
                           ))}
                         </ul>
@@ -255,11 +253,12 @@ export default function DebriefPage() {
           </div>
         </div>
 
-        {/* Action Button */}
+        {/* Action Button - Clear label */}
         <div className="pt-8 border-t border-border">
           <button
             onClick={handleStartNewInterview}
-            className="px-8 py-4 bg-accent hover:bg-accent-dark text-white font-semibold transition-all duration-200"
+            className="px-6 md:px-8 py-3 md:py-4 bg-accent hover:bg-accent-hover text-white font-semibold transition-all duration-base min-h-touch"
+            aria-label="Start another practice session"
           >
             Practice again →
           </button>

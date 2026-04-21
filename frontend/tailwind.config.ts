@@ -9,29 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        accent: {
-          DEFAULT: 'var(--accent)',
-          hover: 'var(--accent-hover)',
-          light: 'var(--accent-light)',
-        },
-        neutral: {
-          50: 'var(--neutral-50)',
-          100: 'var(--neutral-100)',
-          200: 'var(--neutral-200)',
-          300: 'var(--neutral-300)',
-          400: 'var(--neutral-400)',
-          500: 'var(--neutral-500)',
-          600: 'var(--neutral-600)',
-          700: 'var(--neutral-700)',
-          800: 'var(--neutral-800)',
-          900: 'var(--neutral-900)',
-        },
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        surface: 'var(--surface)',
-        border: 'var(--border)',
-        success: 'var(--success)',
-        error: 'var(--error)',
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        accent: "var(--accent)",
+        "accent-hover": "var(--accent-hover)",
+        "accent-light": "var(--accent-light)",
+        surface: "var(--surface)",
+        border: "var(--border)",
+        muted: "var(--muted)",
+        success: "var(--success)",
+        error: "var(--error)",
       },
       fontFamily: {
         sans: ['Space Grotesk', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
@@ -52,21 +39,19 @@ const config: Config = {
         '24': 'var(--space-24)',
       },
       transitionTimingFunction: {
-        'out': 'var(--ease-out)',
-        'in-out': 'var(--ease-in-out)',
+        'smooth': 'var(--ease-out)',
+        'smooth-in-out': 'var(--ease-in-out)',
       },
       transitionDuration: {
-        'fast': 'var(--duration-fast)',
-        'base': 'var(--duration-base)',
-        'slow': 'var(--duration-slow)',
+        'fast': '150ms',
+        'base': '200ms',
+        'slow': '300ms',
       },
-      // Mobile-first breakpoints
-      screens: {
-        'sm': '640px',
-        'md': '768px',
-        'lg': '1024px',
-        'xl': '1280px',
-        '2xl': '1536px',
+      minHeight: {
+        'touch': '44px', // Minimum touch target
+      },
+      minWidth: {
+        'touch': '44px', // Minimum touch target
       },
     },
   },

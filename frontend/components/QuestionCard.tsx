@@ -85,26 +85,29 @@ export default function QuestionCard({ question }: QuestionCardProps) {
           onEnded={() => setIsPlaying(false)}
           onPause={() => setIsPlaying(false)}
           onError={() => setAudioError(true)}
+          aria-label="Question audio"
         />
       )}
 
-      {/* Replay Button */}
+      {/* Replay Button - Clear state */}
       {audioUrl && !audioError && !isLoadingAudio && (
         <div className="mb-4">
           <button
             onClick={handleReplay}
             disabled={isPlaying}
-            className={`flex items-center gap-2 px-4 py-2 font-medium transition-all duration-200 ${
+            className={`flex items-center gap-2 px-4 py-2 font-medium transition-all duration-base ease-smooth min-h-touch ${
               isPlaying
-                ? "bg-surface text-foreground/40 cursor-not-allowed"
-                : "bg-accent hover:bg-accent-dark text-white"
+                ? "bg-surface text-muted cursor-not-allowed"
+                : "bg-accent hover:bg-accent-hover text-white"
             }`}
+            aria-label={isPlaying ? "Playing question" : "Replay question"}
           >
             <svg
               className="w-4 h-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -113,18 +116,20 @@ export default function QuestionCard({ question }: QuestionCardProps) {
                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
               />
             </svg>
-            {isPlaying ? "Playing..." : "Replay Question"}
+            {isPlaying ? "Playing..." : "Replay question"}
           </button>
         </div>
       )}
 
+      {/* Loading state */}
       {isLoadingAudio && !audioError && (
-        <div className="flex items-center gap-2 text-sm text-foreground/60 py-4">
+        <div className="flex items-center gap-2 text-sm text-muted py-4" role="status" aria-live="polite">
           <svg
             className="animate-spin h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <circle
               className="opacity-25"
@@ -144,10 +149,11 @@ export default function QuestionCard({ question }: QuestionCardProps) {
         </div>
       )}
 
+      {/* Error state - Helpful message */}
       {audioError && (
-        <div className="p-3 bg-accent/10 border-l-4 border-accent">
+        <div className="p-3 bg-accent/10 border-l-4 border-accent" role="alert">
           <p className="text-sm text-foreground/80">
-            Audio playback unavailable. Please read the question above.
+            Audio unavailable. Please read the question above.
           </p>
         </div>
       )}

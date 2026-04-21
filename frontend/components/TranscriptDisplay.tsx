@@ -15,13 +15,15 @@ export default function TranscriptDisplay({
 
   return (
     <div>
+      {/* Processing state */}
       {isProcessing && (
-        <div className="flex items-center gap-2 text-foreground/60">
+        <div className="flex items-center gap-2 text-muted" role="status" aria-live="polite">
           <svg
             className="animate-spin h-4 w-4"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <circle
               className="opacity-25"
@@ -41,9 +43,10 @@ export default function TranscriptDisplay({
         </div>
       )}
 
+      {/* Transcript content */}
       {!isProcessing && transcript && (
-        <div className="p-6 bg-surface border-l-4 border-accent">
-          <p className="text-foreground/80 leading-relaxed">
+        <div className="p-4 md:p-6 bg-surface border-l-4 border-accent animate-fade-in">
+          <p className="text-foreground/80 leading-relaxed text-sm md:text-base">
             {transcript}
           </p>
         </div>
