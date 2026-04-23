@@ -22,6 +22,7 @@ router = APIRouter()
 class FollowupRequest(BaseModel):
     question: str
     answer: str
+    previous_acknowledgments: list[str] = []
 
 
 class FollowupResponse(BaseModel):
@@ -73,7 +74,7 @@ async def generate_followup(body: FollowupRequest):
         
         # If no follow-up is needed, generate an acknowledgment for transition
         if not raw["needs_followup"]:
-            ack_prompt = build_acknowledgment_prompt(body.answer)
+            ack_prompt = build_acknowledgment_prompt(body.answer, body.previous_acknowledgments)
             try:
                 ack_raw = call_gemini(ack_prompt)
                 acknowledgment = ack_raw.get("acknowledgment")

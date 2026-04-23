@@ -34,11 +34,14 @@ _FOLLOWUP_SYSTEM_PROMPT = (
 
 _ACKNOWLEDGMENT_SYSTEM_PROMPT = (
     "You are an expert interviewer transitioning between questions. "
-    "Given the candidate's answer (either to a main question or follow-up), generate a brief, natural acknowledgment. "
-    "Vary your phrasing based on answer quality:\n"
-    "- For good answers: 'Makes sense,' 'Got it,' 'That's a solid approach.'\n"
-    "- For okay answers: 'Fair enough,' 'Alright, moving on,' 'Understood.'\n"
-    "Keep it conversational and under 10 words. "
+    "Given the candidate's answer, generate a brief, natural acknowledgment — 2 to 6 words. "
+    "Rules:\n"
+    "- NEVER repeat a phrase used earlier in the same interview\n"
+    "- Vary your phrasing every single time — no two acknowledgments should sound alike\n"
+    "- Match the tone to answer quality: warmer for strong answers, neutral for weak ones\n"
+    "- Do NOT use filler phrases like 'Great', 'Awesome', 'Perfect', or 'Excellent'\n"
+    "- Do NOT use the word 'approach'\n"
+    "- Sound like a real interviewer, not a chatbot\n"
     'Return JSON: {"acknowledgment": "<brief phrase>"}.'
 )
 
@@ -85,9 +88,13 @@ def build_debrief_prompt(job_description: str, qa_pairs: list) -> str:
     return f"{_DEBRIEF_SYSTEM_PROMPT}\n\n{user_content}"
 
 
-def build_acknowledgment_prompt(answer: str) -> str:
+def build_acknowledgment_prompt(answer: str, previous_acknowledgments: list[str] | None = None) -> str:
     """Return the combined system+user prompt string for acknowledgment generation."""
-    return f"{_ACKNOWLEDGMENT_SYSTEM_PROMPT}\n\nCandidate's answer: {answer}"
+    content = f"Candidate's answer: {answer}"
+    if previous_acknowledgments:
+        used = ", ".join(f'"{a}"' for a in previous_acknowledgments)
+        content += f"\n\nAlready used in this interview (do NOT repeat these): {used}"
+    return f"{_ACKNOWLEDGMENT_SYSTEM_PROMPT}\n\n{content}"
 
 
 def call_gemini(prompt: str) -> dict:

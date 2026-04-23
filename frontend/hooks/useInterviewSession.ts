@@ -121,6 +121,16 @@ export function useInterviewSession(): UseInterviewSessionReturn {
 
       // Step 2: Get follow-up question
       console.log("Step 2: Getting follow-up question...");
+      
+      // Collect previous acknowledgments to avoid repetition
+      let previousAcknowledgments: string[] = [];
+      setSession((prev) => {
+        previousAcknowledgments = prev.answers
+          .map((a) => a.acknowledgment)
+          .filter((a): a is string => !!a);
+        return prev;
+      });
+
       const followupResponse = await fetch(`${API_URL}/api/followup`, {
         method: "POST",
         headers: {
@@ -129,6 +139,7 @@ export function useInterviewSession(): UseInterviewSessionReturn {
         body: JSON.stringify({
           question: currentQuestion!,
           answer: transcript,
+          previous_acknowledgments: previousAcknowledgments,
         }),
       });
 
